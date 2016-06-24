@@ -2,18 +2,10 @@ var express = require('express');
 var passport = require('passport');
 var FacebookStrategy = require('passport-facebook').Strategy;
 var router = express.Router();
+var https = require('https');
+var util = require('util');
 
 // In this example, the user's Facebook profile is supplied as the user record.  In a production-quality application, the Facebook profile should be associated with a user record in the application's database, which allows for account linking and authentication with other identity providers.
-
-passport.use(new FacebookStrategy({
-    clientID: '627987540704147',
-    clientSecret: 'fb6d1d95a590c4213ab35ccd581c4f5a',
-    callbackURL: 'http://localhost:3000/login/fb/callback'
-},
-    function (accessToken, refreshToken, profile, cb) {
-        return cb(null, profile);
-    }));
-
 
 
 // In order to restore authentication state across HTTP requests, Passport needs to serialize users into and deserialize users out of the session. In a production-quality application, this would typically be as simple as supplying the user ID when serializing, and querying the user record by ID from the database when deserializing. However, due to the fact that this example does not have a database, the complete Twitter profile is serialized and deserialized. 
@@ -62,7 +54,7 @@ app.get('/login/fb', passport.authenticate('facebook', { scope: ['user_friends',
 app.get('/login/fb/callback', 
         passport.authenticate('facebook', { failureRedirect: '/login'}), 
         function (req, res) {
-        res.redirect('/');
+        res.redirect('/profile');
 });
 app.get('/profile',
        require('connect-ensure-login').ensureLoggedIn(),
@@ -70,6 +62,54 @@ app.get('/profile',
 	console.log(req.user);
     res.render('profile', { user: req.user });
 });
+
+// Define FB API call functions
+function getFriends(userId, accessToken, cb){
+	var get_options = {
+		host: 'graph.facebook.com',
+		port: '443',
+		path: '/v2.2/' + userId + '/friends',
+		method: 'GET',
+		headers: {
+			'Authorization': 'Bearer ' + accessToken,
+		}
+	};
+	console.log(' $$$$$$$ GET THAT MONEY RIGHT $$$$$$$ ');
+	console.log(get_options);
+	
+	var req = https.request(get_options, function (res) {
+		console.log("/nstatus code: ", res.statusCode);
+		res.on('data', function (data) {
+			var jsonData = JSON.parse(data);
+			console.log(jsonData);
+			cb(jsonData);
+		});
+	});
+	
+	// End the request
+	req.end();
+	req.on('error', function (err) {
+		console.log("Error: ", err);
+	});
+}
+
+// Use Facebook Authentication Strategy from Passport
+
+passport.use(new FacebookStrategy({
+    clientID: '627987540704147',
+    clientSecret: 'fb6d1d95a590c4213ab35ccd581c4f5a',
+    callbackURL: 'http://localhost:3000/login/fb/callback'
+}, function (accessToken, refreshToken, profile, cb) {
+	console.log('accessToken = ' + accessToken);
+	console.log('profile = ' + util.inspect(profile));
+	getFriends(profile.id, accessToken, function(friends) {
+		profile.friends = friends.data;
+		return cb(null, profile);
+	});
+}));
+
+
+
 
 app.listen(3000);
 

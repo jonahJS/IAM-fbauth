@@ -1,5 +1,5 @@
 {
-  "name": "fb_authenticate_template",
+  "name": "IAM-fbauth",
   "version": "0.0.1",
   "description": "Authenticate Facebook with node.js, express, and passport.",
   "keywords": [
