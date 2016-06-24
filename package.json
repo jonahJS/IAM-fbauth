@@ -1,0 +1,25 @@
+{
+  "name": "fb_authenticate_template",
+  "version": "0.0.1",
+  "description": "Authenticate Facebook with node.js, express, and passport.",
+  "keywords": [
+    "template",
+    "express",
+    "passport"
+  ],
+  "author": "Jonah Chang",
+  "license": "Unlicense",
+  "homepage": "http://nvent.xyz/p/IAM/fb",
+  "dependencies": {
+    "body-parser": "^1.13.2",
+    "connect-ensure-login": "^0.1.1",
+    "cookie-parser": "^1.3.5",
+    "ejs": "^2.3.3",
+    "express": "^4.13.1",
+    "express-session": "^1.11.3",
+    "morgan": "^1.6.1",
+    "passport": "^0.2.2",
+    "passport-facebook": "^2.0.0",
+    "passport-google-oauth20": "^1.0.0"
+  }
+}
