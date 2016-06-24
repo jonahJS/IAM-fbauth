@@ -9,7 +9,14 @@
   ],
   "author": "Jonah Chang",
   "license": "Unlicense",
-  "homepage": "http://nvent.xyz/p/IAM/fb",
+  "homepage": "https://github.com/jonahJS/IAM-fbauth",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jonahJS/IAM-fbauth.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jonahJS/IAM-fbauth/issues"
+  },
   "dependencies": {
     "body-parser": "^1.13.2",
     "connect-ensure-login": "^0.1.1",
@@ -20,6 +27,7 @@
     "morgan": "^1.6.1",
     "passport": "^0.2.2",
     "passport-facebook": "^2.0.0",
-    "passport-google-oauth20": "^1.0.0"
+	"util" : "0.10.3",
+	"https": "1.0.0"
   }
 }
